@@ -1,0 +1,13 @@
+/download
+.ipynb_checkpoints
+__pycache__
+# files ending with h5
+*.h5
+/models
+/emile_tuner_dir
+/figures
+.conda
+/MME
+/outputs
+/workshop files
+*.nc
