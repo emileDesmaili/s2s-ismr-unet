@@ -13,13 +13,13 @@ conda env create -f environment.yml
 conda activate s2s-cnn
 ```
 
-1. Notebooks
+# 1. Notebooks
 
-a. ACCs.ipynb for figure 1 and 2 (climatologies, and ACC scores)
+a. ```ACCs.ipynb``` for figure 1 and 2 (climatologies, and ACC scores)
 
-b. Bar_plot.ipynb for tuned hindcasts skill plots
+b. ```Bar_plot.ipynb``` for tuned hindcasts skill plots
 
-c. Realtime_forecast_MME.ipynb for real-time forecast evaluation, 2023 season MJO/ENSO diagnostic and GradCAM maps
+c. ```Realtime_forecast_MME.ipynb```  for real-time forecast evaluation, 2023 season MJO/ENSO diagnostic and GradCAM maps
 
-2. Hindcast tuning
+# 2. Hindcast tuning
 
