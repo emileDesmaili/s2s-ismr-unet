@@ -23,7 +23,7 @@ c. ```Realtime_forecast_MME.ipynb```  for real-time forecast evaluation, 2023 se
 
 # 2. Hindcast tuning
 
-To tune the hindcast, please run each ```tune_XXX.py``` notebook for the respective model configuration. *com* refers to the common period and *full* refers to the full period. 
+To tune the hindcast, please run each ```tune_XXX.py``` notebook for the respective model configuration. *com* refers to the common period and *full* refers to the full period. Select the lead times accordingly.
 
 
 # Correspondence
