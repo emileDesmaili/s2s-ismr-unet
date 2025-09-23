@@ -5,9 +5,9 @@ __pycache__
 *.h5
 /models
 /emile_tuner_dir
-/figures
+
 .conda
 /MME
-/outputs
+
 /workshop files
-*.nc
+
