@@ -19,7 +19,9 @@ a. ```ACCs.ipynb``` for figure 1 and 2 (climatologies, and ACC scores)
 
 b. ```Bar_plot.ipynb``` for tuned hindcasts skill plots
 
-c. ```Realtime_forecast_MME.ipynb```  for real-time forecast evaluation, 2023 season MJO/ENSO diagnostic and GradCAM maps
+c. ```RPSS_plots.ipynb``` for spatial RPSS plots at weeks3--4
+
+c. ```Realtime_forecast_MME.ipynb```  for real-time forecast evaluation, 2023 season MJO/ENSO diagnostic.
 
 # 2. Hindcast tuning
 
