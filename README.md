@@ -27,6 +27,9 @@ c. ```Realtime_forecast_MME.ipynb```  for real-time forecast evaluation, 2023 se
 
 To tune the hindcast, please run each ```tune_XXX.py``` script for the respective model configuration. *com* refers to the common period and *full* refers to the full period. Select the lead times accordingly.
 
+# Acknowledgements 
+
+codes for the U-Net architecture were directly adapted from Horat and Lerch (2023), accessible at the following repository:  https://github.com/HoratN/pp-s2s
 
 # Correspondence
 
