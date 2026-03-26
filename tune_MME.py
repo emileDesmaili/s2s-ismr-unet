@@ -92,6 +92,13 @@ def main():
     rpss_train_elr.to_netcdf('outputs/' + (dir or '') + f'MME_{obs}/ELR_rpss_train_{week}.nc')
     rpss_test_elr.to_netcdf('outputs/' + (dir or '') + f'MME_{obs}/ELR_rpss_test_{week}.nc')
 
+    #save predictions and y_test_oh
+    predictions_elr = xr.concat(predictions_list_elr, dim='bootstrap')
+    y_test_oh_elr = xr.concat(y_test_oh_list_elr, dim='bootstrap')
+
+    predictions_elr.to_netcdf('outputs/' + (dir or '') + f'MME_{obs}/ELR_predictions_{week}.nc')
+    y_test_oh_elr.to_netcdf('outputs/' + (dir or '') + f'MME_{obs}/ELR_y_test_{week}.nc')
+
     plots.plot_rpss_elr(rpss_train_list_elr, rpss_test_list_elr, week=week, obs=obs,model="MME",levels=None,dir=dir)
 
     print("############### ELR DONE ###############")
@@ -135,6 +142,12 @@ def main():
     rpss_train.to_netcdf('outputs/' + (dir or '') + f'MME_{obs}/{architecture}_rpss_train_{week}.nc')
     rpss_val.to_netcdf('outputs/' + (dir or '') + f'MME_{obs}/{architecture}_rpss_val_{week}.nc')
     rpss_test.to_netcdf('outputs/' + (dir or '') + f'MME_{obs}/{architecture}_rpss_test_{week}.nc')
+
+    #save predictions and y_test_oh
+    predictions_nn = xr.concat(predictions_list_nn, dim='bootstrap')
+    y_test_oh_nn = xr.concat(y_test_oh_list_nn, dim='bootstrap')
+    predictions_nn.to_netcdf('outputs/' + (dir or '') + f'MME_{obs}/{architecture}_predictions_{week}.nc')
+    y_test_oh_nn.to_netcdf('outputs/' + (dir or '') + f'MME_{obs}/{architecture}_y_test_{week}.nc')
     
     #make a mask based on the training data with less than 3 labels
     def count_unique(values):

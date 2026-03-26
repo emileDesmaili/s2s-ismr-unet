@@ -1,4 +1,5 @@
 
+from datetime import date
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -373,7 +374,7 @@ def download_forecast(model,obs,day,month,year,domain,week,dir,download=True,reg
     def get_forecast_url(model):
         if model == 'ECMWF':
             #if day and month are before or Jun 27, use ECMWF1, else use ECMWF2
-            if month_num < 6 or (month_num == 6 and day < 27):
+            if date(year, month_num, day) < date(2023, 6, 27):
                 forecast_url = forecast_urls['ECMWF1']  
             else:
                 forecast_url = forecast_urls['ECMWF2']

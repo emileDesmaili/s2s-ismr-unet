@@ -60,6 +60,12 @@ def main():
     rpss_train_elr.to_netcdf('outputs/' + (dir or '') + f'{model}_{obs}/ELR_rpss_train_{week}.nc')
     rpss_test_elr.to_netcdf('outputs/' + (dir or '') + f'{model}_{obs}/ELR_rpss_test_{week}.nc')
 
+    #save predictions and y_test_oh
+    predictions_elr = xr.concat(predictions_list_elr, dim='bootstrap')
+    y_test_oh_elr = xr.concat(y_test_oh_list_elr, dim='bootstrap')
+    predictions_elr.to_netcdf('outputs/' + (dir or '') + f'{model}_{obs}/ELR_predictions_{week}.nc')
+    y_test_oh_elr.to_netcdf('outputs/' + (dir or '') + f'{model}_{obs}/ELR_y_test_{week}.nc')
+
 
         #levels=[-0.3,-0.2,-0.1,-0.05, 0, 0.05,0.1, 0.2,0.4]
     plots.plot_rpss_elr(rpss_train_list_elr, rpss_test_list_elr, week=week, obs=obs,
@@ -112,6 +118,16 @@ def main():
     rpss_train.to_netcdf('outputs/' + (dir or '') + f'{model}_{obs}/{architecture}_rpss_train_{week}.nc')
     rpss_val.to_netcdf('outputs/' + (dir or '') + f'{model}_{obs}/{architecture}_rpss_val_{week}.nc')
     rpss_test.to_netcdf('outputs/' + (dir or '') + f'{model}_{obs}/{architecture}_rpss_test_{week}.nc')
+
+    #save predictions and y_test_oh
+    predictions_nn = xr.concat(predictions_list_nn, dim='bootstrap')
+    y_test_oh_nn = xr.concat(y_test_oh_list_nn, dim='bootstrap')
+    predictions_nn.to_netcdf('outputs/' + (dir or '') + f'{model}_{obs}/{architecture}_predictions_{week}.nc')
+    y_test_oh_nn.to_netcdf('outputs/' + (dir or '') + f'{model}_{obs}/{architecture}_y_test_{week}.nc')
+    #save ytest_list 
+    ytest_list_xr = [ytest_list[i].assign_coords(bootstrap=i) for i in range(n_bootstraps)]
+    ytest_xr = xr.concat(ytest_list_xr, dim='bootstrap')
+    ytest_xr.to_netcdf('outputs/' + (dir or '') + f'{model}_{obs}/{architecture}_ytest_raw_{week}.nc')
 
     print ("############### Neural Network DONE ###############")
     #make a mask based on the training data with less than 3 labels
