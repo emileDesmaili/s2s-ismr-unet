@@ -25,6 +25,9 @@ d. ```Realtime_forecast_MME.ipynb```  for real-time forecast evaluation, 2023 se
 
 e. ```DeepNet_prototype_GEFS_IMD.ipynb``` main testing notebook: loads GEFS and IMD data (but feel free to change the lead time, domain, and model/obs combinations), trains and evaluates the U-Net model, and produces hindcast RPSS scores.
 
+f. ```RPSS_drivers.ipynb``` RPSS stratification by MJO phase and ENSO mode (Niño4), including spatial maps, composite significance stippling, bar charts, and combined MJO×ENSO heatmaps.
+
+
 
 # 2. Hindcast tuning
 
