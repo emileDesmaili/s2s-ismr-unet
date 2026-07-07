@@ -12,3 +12,5 @@ __pycache__
 /workshop files
 *.pdf
 *.nc
+/paper
+/.claude

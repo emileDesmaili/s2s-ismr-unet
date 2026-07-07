@@ -5,7 +5,7 @@ Each model is evaluated on its own valid dates:
 - ELR: probabilistic RPSS on ELR's CV test folds (Full Period file)
 - U-Net: probabilistic RPSS on U-Net's CV test folds (Full Period file)
 
-Outputs: figures/RPSS_drivers_combined.pdf (and .png)
+Outputs: figures/RPSS_drivers_combined_by_model.pdf (and .png)
 """
 import sys
 sys.path.insert(0, 'utils')
@@ -251,70 +251,12 @@ _spec = mpl.colormaps['Spectral']
 MJO_BASE = {p: mpl.colors.to_hex(_spec((p - 1) / 7.0)) for p in range(1, 9)}
 mjo_palette = {k: shades(v, n=3) for k, v in MJO_BASE.items()}
 
-# =====================================================================
-# Figure
-# =====================================================================
-fig = plt.figure(figsize=(7.2, 3.0))
-gs = fig.add_gridspec(1, 2, width_ratios=[1, 2.4], wspace=0.16,
-                      left=0.07, right=0.99, bottom=0.16, top=0.94)
-ax_e = fig.add_subplot(gs[0, 0])
-ax_m = fig.add_subplot(gs[0, 1], sharey=ax_e)
-
-# --- ENSO panel ---
 enso_labels = {-1: 'La Niña', 0: 'Neutral', 1: 'El Niño'}
 enso_keys   = [-1, 0, 1]
-xpos = np.arange(len(enso_keys))
-bar_w = 0.30
-for i, m in enumerate(MODELS):
-    for xi, k in enumerate(enso_keys):
-        v = results[m]['enso'][k][0]
-        ax_e.bar(xi + (i - 1) * bar_w, v, width=bar_w,
-                 color=enso_palette[k][i], edgecolor='white', linewidth=0.5)
-ax_e.set_xticks(xpos)
-ax_e.set_xticklabels([enso_labels[k] for k in enso_keys])
-ax_e.axhline(0, color='black', linewidth=0.4)
-ax_e.set_ylabel('RPSS')
-ax_e.set_xlabel('ENSO mode (Niño-4)')
-ax_e.set_title('ENSO mode', loc='center', fontweight='bold')
-
-# --- MJO panel ---
-mjo_keys = list(range(1, 9))
-xpos_m = np.arange(len(mjo_keys))
-for i, m in enumerate(MODELS):
-    for xi, k in enumerate(mjo_keys):
-        v = results[m]['mjo'][k][0]
-        ax_m.bar(xi + (i - 1) * bar_w, v, width=bar_w,
-                 color=mjo_palette[k][i], edgecolor='white', linewidth=0.5)
-ax_m.set_xticks(xpos_m)
-ax_m.set_xticklabels([f'P{k}' for k in mjo_keys])
-ax_m.set_xlabel('MJO phase')
-ax_m.axhline(0, color='black', linewidth=0.4)
-ax_m.tick_params(axis='y', labelleft=False)
-ax_m.set_title('MJO phase', loc='center', fontweight='bold')
-
-# ylim
-ymax = max(max(results[m]['enso'][k][0] for k in enso_keys for m in MODELS),
-           max(results[m]['mjo'][k][0]  for k in mjo_keys  for m in MODELS))
-ymin = min(min(results[m]['enso'][k][0] for k in enso_keys for m in MODELS),
-           min(results[m]['mjo'][k][0]  for k in mjo_keys  for m in MODELS),
-           0)
-ax_e.set_ylim(ymin - (ymax - ymin) * 0.05, ymax * 1.18)
-
-# Shade-key legend: same neutral-gray three-shade swatch indicates model
-neutral_shades = shades('#7F7F7F', n=3)
-handles = [plt.Rectangle((0,0),1,1, color=neutral_shades[i]) for i in range(3)]
-labels  = list(MODELS)
-ax_m.legend(handles, labels, loc='upper right', ncol=3, columnspacing=1.3,
-            handlelength=1.1, handleheight=0.9, borderpad=0.3, fontsize=8)
-
-out_pdf = os.path.join(FIG_DIR, 'RPSS_drivers_combined.pdf')
-out_png = os.path.join(FIG_DIR, 'RPSS_drivers_combined.png')
-plt.savefig(out_pdf, bbox_inches='tight')
-plt.savefig(out_png, bbox_inches='tight', dpi=300)
-print(f"\nWrote {out_pdf}\nWrote {out_png}")
+mjo_keys    = list(range(1, 9))
 
 # =====================================================================
-# Three-row version: one row per model (Raw / ELR / U-Net)
+# Three-row figure: one row per model (Raw / ELR / U-Net)
 # =====================================================================
 # Use the medium (i=1) shade for each category so bars are uniformly saturated.
 enso_solid = {k: enso_palette[k][1] for k in enso_keys}
@@ -328,8 +270,9 @@ axes_e = []
 axes_m = []
 ROW_ORDER = ['U-Net', 'ELR', 'Raw']
 for row, model in enumerate(ROW_ORDER):
-    # Within a row, ENSO and MJO panels share the y-axis; across rows they do not.
-    ax_e = fig2.add_subplot(gs2[row, 0])
+    # Share y across all rows and across ENSO/MJO panels within a row.
+    sharey_e = axes_e[0] if axes_e else None
+    ax_e = fig2.add_subplot(gs2[row, 0], sharey=sharey_e)
     ax_m = fig2.add_subplot(gs2[row, 1], sharey=ax_e)
     axes_e.append(ax_e); axes_m.append(ax_m)
 
@@ -362,14 +305,14 @@ for row, model in enumerate(ROW_ORDER):
         ax_e.set_xlabel('ENSO mode (Niño-4)')
         ax_m.set_xlabel('MJO phase')
 
-# Independent y-lims per row (each model has different magnitude)
-for ax_e, ax_m, model in zip(axes_e, axes_m, ROW_ORDER):
-    vals_row = ([results[model]['enso'][k][0] for k in enso_keys] +
-                [results[model]['mjo'][k][0]  for k in mjo_keys])
-    ymax_r = max(vals_row); ymin_r = min(min(vals_row), 0)
-    pad = (ymax_r - ymin_r) * 0.12 + 1e-4
-    ax_e.set_ylim(ymin_r - pad, ymax_r + pad)
-    # ax_m shares y with ax_e via sharey, so no separate set
+# Global y-lim across all rows
+all_vals = []
+for model in ROW_ORDER:
+    all_vals += [results[model]['enso'][k][0] for k in enso_keys]
+    all_vals += [results[model]['mjo'][k][0]  for k in mjo_keys]
+y_hi = max(all_vals); y_lo = min(min(all_vals), 0)
+pad = (y_hi - y_lo) * 0.10 + 1e-4
+axes_e[0].set_ylim(y_lo - pad, y_hi + pad)  # propagates via sharey
 
 # Save
 out_pdf_3 = os.path.join(FIG_DIR, 'RPSS_drivers_combined_by_model.pdf')
